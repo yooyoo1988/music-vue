@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>乐听</title>
+    <link rel="stylesheet" href="./css/index.css">
+
+</head>
+
+<body>
+
+  
+
+    <div id="app" class="wrap">
+        <!-- 搜索区域 -->
+        <div class="search_bar">
+            <h2>乐听</h2>
+            <input type="text" @keyup.enter="searchMusic" v-model="query" placeholder="音乐/用户">
+        </div>
+        <!-- 中心区域 -->
+        <div class="center_con">
+            <!-- 搜索歌曲列表 -->
+            <div class="song_wrapper">
+                <ul class="song_list">
+                    <li v-for="(item,index) in musicList" @click="playMusic(item.id,index)">
+                        <!-- 点击放歌 -->
+                        <a :class="isIndex==index&&isPlay==true?'wave':'icon'" href="javascript:;"
+                            @click="musicTime();playAid();progressBar()"></a>
+
+                        <b>{{item.name}}</b>
+                        <span v-show="item.mvid!=0" @click="playMv(item.mvid)">
+                            <i></i>
+                        </span>
+                    </li>
+                    <img src="./images/line.png" class="switch_btn" alt="">
+                </ul>
+
+            </div>
+            <!-- 歌曲信息容器 -->
+            <div class="player_con">
+                <img src="./images/player_bar.png" class="play_bar" :class="isPlay?'play_bar_rotate':''">
+                <!-- 黑胶碟片 -->
+                <img src="./images/disc.png" class="disc autoRotate" :class="isPlay?'playing':''">
+                <img :src="musicCover" class="cover autoRotate " :class="isPlay?'playing':''" />
+
+            </div>
+            <!-- 评论容器 -->
+            <div class="comment_wrapper">
+                <h4 class="title">热门留言</h4>
+                <div class="comment_list">
+                    <dl v-for="item in commentList">
+                        <dt><img :src="item.user.avatarUrl" alt=""></dt>
+                        <dd class="name">{{item.user.nickname}}</dd>
+                        <dd class="detail">{{item.content}}</dd>
+                    </dl>
+                </div>
+                <img src="images/line.png" class="right_line">
+            </div>
+
+
+        </div>
+
+        <div class="audio_con">
+            <audio :src="musicUrl" class="myaudio" loop></audio>
+
+
+            <!-- 控制歌曲按钮-->
+            <div class="control_con">
+                <a href="javascript:;" class="prev" @click="prev"></a>
+                <a @click='playAid();musicTime();progressBar()' href="javascript:;"
+                    :class="isPlay?'start':'pause'"></a>
+                <a href="javascript:;" class="next" @click="next()"></a>
+            </div>
+            <!-- 进度条 -->
+            <div class="rate_wrapper">
+                <div class="line" @click="hitJump($event)"></div>
+                <div class="rate" @click="hitJump($event)"> </div>
+
+            </div>
+            <!-- 当前播放时间/播放总时长 -->
+            <div class="timer">
+                <span class="current"></span>
+
+                <span class="total">{{total}}</span>
+            </div>
+
+            <!-- 音量键 -->
+            <div class="volume">
+                <a href="javascript:;" :class="muteFlag==true?'voKey':'mute'" @click="muted"></a>
+                <div class="bar" @click="musicVolume($event)"></div>
+                <div class="bar1" @click="musicVolume($event)"></div>
+            </div>
+
+
+
+        </div>
+
+        <!-- mv区域 -->
+        <div class="video_con" v-show="isShow">
+            <video :src="mvUrl" controls></video>
+            <div class="mask" @click="hide"></div>
+        </div>
+
+    </div>
+
+  <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <!-- 官网提供的 axios 在线地址 -->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="./js/main.js"></script>
+</body>
+
+</html>
